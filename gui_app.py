@@ -156,3 +156,13 @@ def api_chat():
 
 if __name__ == "__main__":
     APP.run(host="127.0.0.1", port=7860, debug=False, use_reloader=False, threaded=True)
+
+# --- health endpoint (liveness probe) ---
+@APP.route("/health", methods=["GET"])
+def health():
+    import time
+    try:
+        from chat_loop import MODEL as CHAT_MODEL
+    except Exception:
+        CHAT_MODEL = "unknown"
+    return {"ok": True, "model": CHAT_MODEL, "ts": time.time()}
