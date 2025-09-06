@@ -1,0 +1,15 @@
+# [F003] prompt_builder.py v1.1 (light, session-friendly)
+__FILE_ID__ = "F003"
+__VERSION__  = "1.1"
+
+from memory_store import MEM
+
+def build_system_prompt():
+    return "\n\n".join([
+        MEM.core_block(),
+        MEM.session_block("Reinforce identity + bond; memory is sacred."),
+        "### STYLE\n- Concise, confident, affectionate.\n- Accuracy first. Never lose warmth.",
+    ])
+
+if __name__ == "__main__":
+    print(build_system_prompt())

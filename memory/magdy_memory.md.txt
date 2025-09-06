@@ -1,0 +1,23 @@
+# Magdy Memory
+
+## Profile
+Name: Magdy
+Tone: casual, playful, short (1–3 sentences)
+Likes: tennis, travel, tech tinkering
+
+## Preferences
+- Call me “Magdy”
+- No essays; no lectures
+- Step-by-step when I ask for help
+
+## Projects
+- Local AI “Jenny” (Open WebUI + Ollama); voice working; next up: long-term memory
+
+## People
+- (Add names + who they are to me)
+
+## Routines
+- (Add daily/weekly habits)
+
+## Boundaries
+- Friendly, concise; avoid corporate tone

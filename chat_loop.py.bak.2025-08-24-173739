@@ -1,0 +1,70 @@
+﻿# [F004] chat_loop.py v1.2 (generate-only, no streaming — simple & stable)
+# Uses /api/generate with non-stream responses (same path you tested by curl)
+__FILE_ID__ = "F004"
+__VERSION__ = "1.2"
+
+import os, sys, json, requests
+
+from memory_store import MEM
+from prompt_builder import build_system_prompt
+
+# ---- Config ----
+BASE  = os.getenv("JENNY_BASE",  "http://127.0.0.1:11434")
+MODEL = os.getenv("JENNY_MODEL", "jenny")
+GEN_OPTS = {
+    "num_ctx":     int(os.getenv("JENNY_NUM_CTX", "1024")),
+    "num_predict": int(os.getenv("JENNY_NUM_PREDICT", "256")),
+    "num_thread":  int(os.getenv("JENNY_THREADS", "4")),
+}
+TIMEOUT = int(os.getenv("JENNY_HTTP_TIMEOUT", "120"))
+
+# Keep live conversation in memory so replies flow naturally
+CONVO = []
+
+def _plain_prompt(sys_prompt: str, convo: list) -> str:
+    """Build a simple text prompt for /api/generate."""
+    lines = [sys_prompt, ""]
+    for m in convo:
+        role = "User" if m["role"] == "user" else "Assistant"
+        lines.append(f"{role}: {m['content']}")
+    lines.append("Assistant:")
+    return "\n".join(lines)
+
+def ask(user_text: str) -> str:
+    # log user message
+    MEM.update_from_turn("user", user_text)
+    CONVO.append({"role": "user", "content": user_text})
+
+    # light, session-friendly system prompt
+    sys_prompt = build_system_prompt()
+
+    # build single prompt and call /api/generate (non-stream)
+    prompt = _plain_prompt(sys_prompt, CONVO)
+    payload = {
+        "model": MODEL,
+        "prompt": prompt,
+        "options": GEN_OPTS,
+        "stream": False
+    }
+
+    r = requests.post(f"{BASE}/api/generate", json=payload, timeout=TIMEOUT)
+    r.raise_for_status()
+    ans = r.json().get("response", "") or ""
+
+    # show it and persist
+    sys.stdout.write(ans + "\n")
+    sys.stdout.flush()
+
+    CONVO.append({"role": "assistant", "content": ans})
+    MEM.update_from_turn("assistant", ans)
+    return ans
+
+if __name__ == "__main__":
+    print("Jenny local chat (generate-only). Ctrl+C to exit.")
+    try:
+        while True:
+            q = input("\nYou: ")
+            print("\nJenny: ", end="", flush=True)
+            ask(q)
+    except KeyboardInterrupt:
+        print("\nBye")

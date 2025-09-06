@@ -1,0 +1,3 @@
+- 2025-08-23_14:50:34  |  SNAP: jenny_20250823-145034_gui-first-run-good.tar.gz  |  label: gui-first-run-good  |  model: jenny:latest  |  chat_loop v1.2 | prompt_builder v1.1 | ollama 0.11.6
+- 2025-08-23_17:40:32  |  SNAP: jenny_20250823-174032_pre-gui-phase1.tar.gz  |  label: pre-gui-phase1  |  model: jenny:latest  |  chat_loop v1.2 | prompt_builder v1.1 | ollama 0.11.6
+- 2025-08-23_18:09:08  |  SNAP: jenny_20250823-180908_gui-phase1-file-url-voice-heartbeat-ts.tar.gz  |  label: gui-phase1-file-url-voice-heartbeat-ts  |  model: jenny:latest  |  chat_loop v1.2 | prompt_builder v1.1 | ollama 0.11.6
