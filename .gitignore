@@ -1,0 +1,20 @@
+# secrets / keys
+*.key
+*.pem
+*.pfx
+*.crt
+models/.webui_secret_key
+
+# caches / builds
+__pycache__/
+*.pyc
+*.log
+dist/
+build/
+*.bak
+*.001
+*.save
+nul
+
+# heavy reports (keep local only)
+_reports/
