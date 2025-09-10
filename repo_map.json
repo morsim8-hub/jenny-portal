@@ -1,0 +1,20 @@
+{
+  "repo": {
+    "remote": "https://github.com/morsim8-hub/jenny-portal.git"
+  },
+  "bat": {
+    "fast": "FILL_IN",
+    "tech": "FILL_IN",
+    "switch": "FILL_IN_OR_REMOVE"
+  },
+  "gui": {
+    "folder": "FILL_IN",
+    "entry_py": "FILL_IN"
+  },
+  "memory": {
+    "manager_py": "FILL_IN",
+    "store_dir": "FILL_IN"
+  },
+  "models": { "dir": "FILL_IN" },
+  "backups": { "dir": "FILL_IN" }
+}
