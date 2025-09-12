@@ -1,0 +1,77 @@
+import os, json, requests
+
+def get_config():
+    base  = os.getenv("JENNY_BASE",  "http://127.0.0.1:11435")
+    model = os.getenv("JENNY_MODEL", "fast")  # ultra/fast/tech aliases
+    opts = {
+        "num_ctx": int(os.getenv("JENNY_NUM_CTX", "512")),
+        "num_predict": int(os.getenv("JENNY_NUM_PREDICT", "96")),
+        "num_thread": int(os.getenv("JENNY_THREADS", "4")),
+        "temperature": float(os.getenv("JENNY_TEMP", "0.2")),
+        "top_p": float(os.getenv("JENNY_TOP_P", "0.9")),
+        "seed": int(os.getenv("JENNY_SEED", "42")),
+
+        # ---- ONE CHANGE: add anti-repetition controls (safe defaults) ----
+        "repeat_penalty": float(os.getenv("JENNY_REPEAT_PENALTY", "1.22")),
+        "repeat_last_n": int(os.getenv("JENNY_REPEAT_LAST_N", "192")),
+    }
+    return base, model, opts
+
+def chat_once(base, model, user_text, sys_prompt, opts):
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": sys_prompt},
+            {"role": "user",   "content": user_text},
+        ],
+        "options": opts,
+        "stream": False,
+    }
+    r = requests.post(f"{base}/api/chat", json=payload, timeout=120)
+    if r.status_code == 404:
+        prompt = f"{sys_prompt}\n\nUser: {user_text}\nAssistant:"
+        gp = {"model": model, "prompt": prompt, "options": opts, "stream": False}
+        rg = requests.post(f"{base}/api/generate", json=gp, timeout=120)
+        rg.raise_for_status()
+        return rg.json().get("response","")
+    r.raise_for_status()
+    return r.json().get("message",{}).get("content","")
+
+def chat_stream(base, model, user_text, sys_prompt, opts):
+    payload = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": sys_prompt},
+            {"role": "user",   "content": user_text},
+        ],
+        "options": opts,
+        "stream": True,
+    }
+    with requests.post(f"{base}/api/chat", json=payload, stream=True, timeout=120) as r:
+        if r.status_code == 404:
+            yield chat_once(base, model, user_text, sys_prompt, opts)
+            return
+        r.raise_for_status()
+        for line in r.iter_lines(decode_unicode=True):
+            if not line:
+                continue
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            delta = obj.get("message",{}).get("content","")
+            if delta:
+                yield delta
+            if obj.get("done"):
+                break
+
+def warm(base, model, opts):
+    try:
+        requests.post(f"{base}/api/chat", json={
+            "model": model,
+            "messages":[{"role":"user","content":"warm"}],
+            "options": {**opts, "num_predict": 16},
+            "stream": False
+        }, timeout=30)
+    except Exception:
+        pass
