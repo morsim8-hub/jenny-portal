@@ -1,0 +1,10 @@
+rules for the project and must be adhered too never by-passed and should be read before nay changes to any file
+
+no. 1- no breaking our working system any work starting today should under no circumstances damage or prevent the start  of the server and the GUI and we will triple check everything no stepping back. 
+no. 2 always review previous work to verify file names and location no guessing you must anchor the main facts like where is the main folder and the names of the main action controlling files we have to stop the information drifting.
+No 3- no patching files any changes must be writing in a new file patching has causes many issues in the past  
+No 4- no new files or new names of files unless it is absolutely necessary to minimize confusion. 
+No 5- all work must be checked twice for error we are making way too many errors that is why is taking us this long 
+No 6- only one or two changes at the time the verify system function multiple changes results in slowing down and introduce too many errors and going back while you list 6 changes if the first fail we wasted so much time slow and steady we go.
+No 7- Always check for the latest file or data never guess nor use memory while the file is present  
+ please keep these guiding rules in your memory they are super important to review before we do any work
