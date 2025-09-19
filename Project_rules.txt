@@ -7,4 +7,6 @@ No 4- no new files or new names of files unless it is absolutely necessary to mi
 No 5- all work must be checked twice for error we are making way too many errors that is why is taking us this long 
 No 6- only one or two changes at the time the verify system function multiple changes results in slowing down and introduce too many errors and going back while you list 6 changes if the first fail we wasted so much time slow and steady we go.
 No 7- Always check for the latest file or data never guess nor use memory while the file is present  
+No 8- never use or suggest nano for editing files
+
  please keep these guiding rules in your memory they are super important to review before we do any work
